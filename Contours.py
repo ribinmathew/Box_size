@@ -16,7 +16,7 @@ while (True):
     gray_video = cv2.cvtColor(frame,cv2.COLOR_BGR2GRAY)
     cv2.imshow("gray_video",gray_video)
     #now we have to convert into binary color
-    
+
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
