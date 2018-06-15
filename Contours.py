@@ -19,18 +19,55 @@ while (True):
     cv2.imshow("gray_video",gray_video)
     #now we have to convert into binary color
     #before that we are going to apply thresholding
-    ret,threshold_video = cv2.threshold(gray_video,150,250,cv2.THRESH_BINARY_INV)
+    ret,threshold_video = cv2.threshold(gray_video,190,250,cv2.THRESH_BINARY_INV)
     cv2.imshow("Thrsh_video",threshold_video)
     #so we applied threshold and got good result with simple thresholdin technique
     kernel = np.ones((5,5),np.uint8)
     dialated_video = cv2.dilate(threshold_video,kernel,iterations=2)
     opening_video = cv2.morphologyEx(dialated_video,cv2.MORPH_CLOSE,kernel)
     # now we have to draw contours around it
-    contor_image = cv2.Canny(dialated_video,150,255)
-    cv2.imshow("contour_video",contor_image)
+    #contor_image = cv2.Canny(dialated_video,150,255)
+    #cv2.imshow("contour_video",contor_image)
     #with open_filter to rectify the noise
-    contor_image1 = cv2.Canny(opening_video, 150, 255)
-    cv2.imshow("open video", contor_image1)
+    edge_image1 = cv2.Canny(opening_video, 190, 255)
+    cv2.imshow("open video", edge_image1)
+    #now we have to draw contour around the object
+    im2,contours,heirarchy = cv2.findContours(edge_image1,1,2)
+    for c in contours:
+        #here we are avoiding small errors by eliminating small  boxes
+        if cv2.contourArea(c) > 5000:
+            #we are drawing a rectangle around the counter and displaying it
+
+            x,y,w,h = cv2.boundingRect(c)
+            #print(x,y,w,h)
+            #image_with_box = cv2.rectangle(frame,(x,y),(x+w,y+h),(255,255,255),2)
+            #cv2.imshow("image_wih_box",image_with_box)
+            #the image we have created with box is not a rotatable box. so lets create a rotating box
+            rotating_rectangle_image = cv2.minAreaRect(c)
+            box = cv2.boxPoints(rotating_rectangle_image)
+            #print(box)
+            box = np.int0(box)
+            rotating_box_image= cv2.drawContours(frame,[box],0,(0,0,255),2)
+            cv2.imshow("box",rotating_box_image)
+            #now lets draw a small circles on the box points
+            for (x,y) in box:
+                box_circle = cv2.circle(frame,(int(x),int(y)),3,(255,0,0),-1)
+                cv2.imshow("box_circle",box_circle)
+            #
+            box= np.int0(box)
+            X,Y = box[0]
+            point1 = cv2.putText(frame,"A",(X,Y),cv2.FONT_ITALIC,.8,(50,200,100),2,cv2.LINE_AA)
+            X1, Y1 = box[1]
+            point2 = cv2.putText(frame, "B", (X1, Y1), cv2.FONT_ITALIC, .8, (50, 200, 100), 2, cv2.LINE_AA)
+            X2, Y2 = box[2]
+            point3 = cv2.putText(frame, "C", (X2, Y2), cv2.FONT_ITALIC, .8, (50, 200, 100), 2, cv2.LINE_AA)
+            X3, Y3 = box[3]
+            point4 = cv2.putText(frame, "D", (X3, Y3), cv2.FONT_ITALIC, .8, (50, 200, 100), 2, cv2.LINE_AA)
+
+            #print(cv2.contourArea(c))
+
+    #print(cv2.contourArea(contor_image1))
+
     #the edge detection was good, still we have to give little dialation to the video,after thresholding
 
 
