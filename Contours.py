@@ -53,7 +53,8 @@ while (True):
             for (x,y) in box:
                 box_circle = cv2.circle(frame,(int(x),int(y)),3,(255,0,0),-1)
                 cv2.imshow("box_circle",box_circle)
-            #
+            #here we are gonna add text to the points
+
             box= np.int0(box)
             X,Y = box[0]
             point1 = cv2.putText(frame,"A",(X,Y),cv2.FONT_ITALIC,.8,(50,200,100),2,cv2.LINE_AA)
@@ -63,6 +64,15 @@ while (True):
             point3 = cv2.putText(frame, "C", (X2, Y2), cv2.FONT_ITALIC, .8, (50, 200, 100), 2, cv2.LINE_AA)
             X3, Y3 = box[3]
             point4 = cv2.putText(frame, "D", (X3, Y3), cv2.FONT_ITALIC, .8, (50, 200, 100), 2, cv2.LINE_AA)
+            #now we are gonna Define the points A,B,C,D and we are gonna give the co-oirdinates to the same
+            P1,Q1 = box[0] #A
+            P2,Q2 = box[1] #B
+            P3,Q3 = box[2] #C
+            P4,Q4 = box[3] #D
+            # now we got the p1 and q1, co-ordinataes for all the points
+            # we are gonna find the euclidean distance using formula
+            # the euclidean distance formula
+            # d(p,q) = Squareroot((q1-p1)**2 + (q2-p2)**2)
 
             #print(cv2.contourArea(c))
 
