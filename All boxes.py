@@ -15,8 +15,12 @@ def boxes(image):
     boxes = []
     for c in contours:
         if cv2.contourArea(c) > 3000:
-            (x, y, w, h) = cv2.boundingRect(c)
-            boxes.append((x, y, w, h))
+            rotating_rectangle_image = cv2.minAreaRect(c)
+            box = cv2.boxPoints(rotating_rectangle_image)
+            #box = np.int0(box)
+            #(x, y, w, h) = cv2.boundingRect(c)
+            box = np.int0(box)
+            boxes.append(box)
 
     return boxes
 
@@ -35,14 +39,29 @@ while (True):
     edge_image = cv2.Canny(threshold_image, 155, 255)
     cv2.imshow("Edge_image", edge_image)
     image= boxes(edge_image)
-    print(len(image))
+  #  print(image)
+  #  print(len(image))
+
+
+  
+   
     if len(image)>0:
+        print(image[0])
+        rotating_box_image = cv2.drawContours(frame, [image[0]], 0, (0, 0, 255), 2)
+        cv2.imshow("box", rotating_box_image)
+
+
         #print(image[0])
-        images = np.array(image[0])
-        rectangle= cv2.rectangle(frame,(images[0],images[1]),(images[0] + images[2],images[1]+images[3]),(0,255,0))
-        cv2.imshow("rectangle",rectangle)
-        print(images)
+        #images = np.array(image[0])
+       # rectangle= cv2.rectangle(frame,(images[0],images[1]),(images[0] + images[2],images[1]+images[3]),(0,255,0))
+        #cv2.imshow("rectangle",rectangle)
+       # print(images)
         if len(image) > 1:
+            print("2nd image",image[1])
+            rotating_box_image1 = cv2.drawContours(frame, [image[1]], 0, (0, 255,0), 2)
+            cv2.imshow("box1", rotating_box_image1)
+
+            """
             images1 = np.array(image[1])
             rectangle = cv2.rectangle(frame,(images1[0],images1[1]),(images1[0]+images1[2], images1[1]+images[3]),(255,0,0))
             cv2.imshow("2nd rectangle",rectangle)
@@ -72,7 +91,7 @@ while (True):
 
        # print(x,y,w,h)
         #
-
+"""
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
